@@ -10,3 +10,10 @@ Seus tempos são salvos automaticamente no histórico, permitindo acompanhar seu
 - 🎯 Salvamento automático.
 
 https://tmallmann.github.io/cube-timer/
+
+<br>
+
+Implementar:<br>
+· Suporte para mobile;
+· Mais modalidades;
+· Scramble preview;
