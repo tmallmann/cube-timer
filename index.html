@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cube Timer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <div class="header-top">
+                <div>
+                    <h1 data-i18n="title">Cube Timer</h1>
+                    <p data-i18n="subtitle">Timer, scrambles e histórico de solves</p>
+                </div>
+
+                <label class="language-control">
+                    <span data-i18n="language">Idioma</span>
+                    <select id="languageSelect" aria-label="Idioma">
+                        <option value="pt-BR">Português</option>
+                        <option value="en">English</option>
+                    </select>
+                </label>
+            </div>
+        </header>
+
+        <section class="controls card">
+            <div class="control-group">
+                <label for="cubeType" data-i18n="cube">Cubo</label>
+                <select id="cubeType">
+                    <option value="3x3">3x3</option>
+                    <option value="4x4">4x4</option>
+                    <option value="5x5">5x5</option>
+                </select>
+            </div>
+
+            <label class="checkbox-control">
+                <input type="checkbox" id="inspectionEnabled">
+                <span data-i18n="inspection">Inspeção de 15 segundos</span>
+            </label>
+        </section>
+
+        <section class="scramble-section card">
+            <div class="section-title-row">
+                <h2>
+                    <span data-i18n="scramble">Scramble</span>
+                    <span id="scrambleCubeType">3x3</span>
+                </h2>
+                <button id="newScramble" data-i18n="newScramble">
+                    Novo scramble
+                </button>
+            </div>
+            <div id="scramble" class="scramble">Carregando...</div>
+        </section>
+
+        <section class="timer-section">
+            <div id="timerStatus" class="timer-status" data-i18n="ready">Pronto</div>
+            <div id="timer" class="timer">0.00</div>
+            <p id="timerHelp" class="timer-help" data-i18n="timerHelp">
+                Pressione ESPAÇO para iniciar/parar
+            </p>
+        </section>
+
+        <section class="stats">
+            <div class="stat card">
+                <span class="stat-label" data-i18n="solves">Solves</span>
+                <strong id="solveCount">0</strong>
+            </div>
+            <div class="stat card">
+                <span class="stat-label" data-i18n="best">Melhor</span>
+                <strong id="bestTime">-</strong>
+            </div>
+            <div class="stat card">
+                <span class="stat-label">Ao5</span>
+                <strong id="ao5">-</strong>
+            </div>
+            <div class="stat card">
+                <span class="stat-label">Ao12</span>
+                <strong id="ao12">-</strong>
+            </div>
+        </section>
+
+        <section class="history-section card">
+            <div class="history-header">
+                <h2 data-i18n="history">Histórico</h2>
+                <button id="clearHistory" class="danger" data-i18n="clearHistory">
+                    Limpar histórico
+                </button>
+            </div>
+
+            <div id="history" class="history"></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

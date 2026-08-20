@@ -1,0 +1,437 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    background: #f2f2f2;
+}
+
+body {
+    min-height: 100vh;
+    background: #f2f2f2;
+}
+
+button,
+select {
+    font: inherit;
+}
+
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    background: #222;
+    color: #fff;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.container {
+    width: min(950px, 94%);
+    margin: 0 auto;
+    padding: 30px 0 50px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* HEADER */
+
+header {
+    margin-bottom: 25px;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #666;
+}
+
+.language-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.language-control select {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #fff;
+}
+
+/* CONTROLES */
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-group label,
+.checkbox-control {
+    font-weight: 600;
+}
+
+select {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: #fff;
+}
+
+.checkbox-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-control input {
+    width: 17px;
+    height: 17px;
+}
+
+/* SCRAMBLE */
+
+.scramble-section {
+    padding: 22px 25px;
+    text-align: center;
+}
+
+.section-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.section-title-row h2 {
+    text-align: left;
+}
+
+.scramble {
+    margin: 22px auto 0;
+    max-width: 850px;
+    min-height: 80px;
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+/* TIMER */
+
+.timer-section {
+    text-align: center;
+    padding: 35px 0;
+}
+
+.timer-status {
+    min-height: 24px;
+    font-weight: 700;
+    color: #666;
+}
+
+.timer-status.inspection {
+    color: #b36b00;
+}
+
+.timer-status.dnf {
+    color: #c62828;
+}
+
+.timer {
+    font-size: 100px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.timer-help {
+    margin-top: 8px;
+    color: #777;
+}
+
+/* ESTATÍSTICAS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat {
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.stat strong {
+    font-size: 23px;
+}
+
+/* HISTÓRICO */
+
+.history-section {
+    padding: 25px;
+}
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.history-header h2 {
+    font-size: 24px;
+}
+
+.danger {
+    background: #c62828;
+}
+
+/*
+    O container abaixo tem altura limitada.
+    Assim, o histórico pode ter centenas de solves
+    sem aumentar infinitamente a altura da página.
+*/
+.history {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 5px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+/* Barra de rolagem */
+
+.history::-webkit-scrollbar {
+    width: 9px;
+}
+
+.history::-webkit-scrollbar-track {
+    background: #eee;
+    border-radius: 10px;
+}
+
+.history::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+}
+
+.history::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+.empty-history {
+    color: #777;
+    padding: 10px 0;
+}
+
+/*
+    número | tempo | cubo | data | scramble | copiar | excluir
+*/
+
+.solve {
+    display: grid;
+    grid-template-columns: 55px 90px 55px 95px minmax(0, 1fr) 38px 38px;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 10px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.solve-number {
+    color: #777;
+    font-weight: 700;
+}
+
+.solve-time {
+    font-size: 19px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.solve-time.dnf {
+    color: #c62828;
+}
+
+.solve-cube {
+    font-weight: 700;
+}
+
+.solve-date {
+    color: #666;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.solve-scramble {
+    min-width: 0;
+    color: #555;
+    font-size: 13px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.action-button {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.copy-solve {
+    background: #555;
+}
+
+.delete-solve {
+    background: #999;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 850px) {
+    .solve {
+        grid-template-columns: 45px 80px 45px 80px minmax(0, 1fr) 34px 34px;
+        gap: 7px;
+    }
+
+    .solve-scramble {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 680px) {
+    .header-top {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .section-title-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .timer {
+        font-size: 70px;
+    }
+
+    .solve {
+        grid-template-columns: 35px 75px 45px 75px minmax(0, 1fr) 32px 32px;
+        gap: 5px;
+        padding: 10px 7px;
+    }
+
+    .solve-date {
+        font-size: 12px;
+    }
+
+    .solve-scramble {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 96%;
+        padding-top: 20px;
+    }
+
+    header h1 {
+        font-size: 30px;
+    }
+
+    .timer {
+        font-size: 55px;
+    }
+
+    .scramble {
+        font-size: 18px;
+    }
+
+    .history-section {
+        padding: 17px 12px;
+    }
+
+    /*
+        No celular, as informações principais ficam
+        na primeira linha e o scramble na segunda.
+    */
+    .solve {
+        grid-template-columns: 32px 75px 45px 1fr 32px 32px;
+        grid-template-areas:
+            "number time cube date copy delete"
+            "scramble scramble scramble scramble scramble scramble";
+    }
+
+    .solve-number { grid-area: number; }
+    .solve-time { grid-area: time; }
+    .solve-cube { grid-area: cube; }
+    .solve-date { grid-area: date; }
+    .solve-scramble {
+        grid-area: scramble;
+        padding-top: 4px;
+    }
+
+    .copy-solve {
+        grid-area: copy;
+    }
+
+    .delete-solve {
+        grid-area: delete;
+    }
+}
