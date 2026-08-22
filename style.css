@@ -154,6 +154,10 @@ select {
 .timer-section {
     text-align: center;
     padding: 35px 0;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 }
 
 .timer-status {
@@ -228,11 +232,7 @@ select {
     background: #c62828;
 }
 
-/*
-    O container abaixo tem altura limitada.
-    Assim, o histórico pode ter centenas de solves
-    sem aumentar infinitamente a altura da página.
-*/
+/* O container tem altura limitada. O histórico pode ter centenas de solves sem aumentar infinitamente a altura da página */
 .history {
     max-height: 500px;
     overflow-y: auto;
@@ -268,9 +268,7 @@ select {
     padding: 10px 0;
 }
 
-/*
-    número | tempo | cubo | data | scramble | copiar | excluir
-*/
+/* número | tempo | cubo | data | scramble | copiar | excluir */
 
 .solve {
     display: grid;
@@ -407,10 +405,7 @@ select {
         padding: 17px 12px;
     }
 
-    /*
-        No celular, as informações principais ficam
-        na primeira linha e o scramble na segunda.
-    */
+    /* No celular, as informações principais ficam na primeira linha e o scramble na segunda */
     .solve {
         grid-template-columns: 32px 75px 45px 1fr 32px 32px;
         grid-template-areas:
