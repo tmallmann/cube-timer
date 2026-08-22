@@ -1,60 +1,34 @@
 // ==========================================
 // CONFIGURAÇÃO
 // ==========================================
-
 const STORAGE_KEY = "cubeTimerHistoryV3";
 const LANGUAGE_KEY = "cubeTimerLanguage";
 const INSPECTION_SECONDS = 15;
 
-
 // ==========================================
 // ELEMENTOS
 // ==========================================
-
 const cubeTypeElement = document.getElementById("cubeType");
-const inspectionEnabledElement =
-    document.getElementById("inspectionEnabled");
-
-const languageSelect =
-    document.getElementById("languageSelect");
-
+const inspectionEnabledElement = document.getElementById("inspectionEnabled");
+const languageSelect = document.getElementById("languageSelect");
 const scrambleElement = document.getElementById("scramble");
-const scrambleCubeTypeElement =
-    document.getElementById("scrambleCubeType");
-
-const newScrambleButton =
-    document.getElementById("newScramble");
-
+const scrambleCubeTypeElement = document.getElementById("scrambleCubeType");
+const newScrambleButton = document.getElementById("newScramble");
 const timerElement = document.getElementById("timer");
-const timerStatusElement =
-    document.getElementById("timerStatus");
-
-const timerHelpElement =
-    document.getElementById("timerHelp");
-
-const clearHistoryButton =
-    document.getElementById("clearHistory");
-
-const historyElement =
-    document.getElementById("history");
-
-const solveCountElement =
-    document.getElementById("solveCount");
-
-const bestTimeElement =
-    document.getElementById("bestTime");
-
-const ao5Element =
-    document.getElementById("ao5");
-
-const ao12Element =
-    document.getElementById("ao12");
+const timerStatusElement = document.getElementById("timerStatus");
+const timerHelpElement = document.getElementById("timerHelp");
+const timerSectionElement = document.querySelector(".timer-section");
+const clearHistoryButton = document.getElementById("clearHistory");
+const historyElement = document.getElementById("history");
+const solveCountElement = document.getElementById("solveCount");
+const bestTimeElement = document.getElementById("bestTime");
+const ao5Element = document.getElementById("ao5");
+const ao12Element = document.getElementById("ao12");
 
 
 // ==========================================
 // TRADUÇÕES
 // ==========================================
-
 const translations = {
     "pt-BR": {
         title: "Cube Timer",
@@ -65,7 +39,7 @@ const translations = {
         scramble: "Scramble",
         newScramble: "Novo scramble",
         ready: "Pronto",
-        timerHelp: "Pressione ESPAÇO para iniciar/parar",
+        timerHelp: "Toque no cronômetro ou pressione ESPAÇO para iniciar/parar",
         solves: "Solves",
         best: "Melhor",
         history: "Histórico",
@@ -78,9 +52,9 @@ const translations = {
         dnfHelp: "O solve foi registrado como DNF",
 
         timing: "Cronometrando",
-        stopHelp: "Pressione ESPAÇO para parar",
+        stopHelp: "Toque no cronômetro ou pressione ESPAÇO para parar",
         finished: "Solve finalizado",
-        startAgain: "Pressione ESPAÇO para iniciar novamente",
+        startAgain: "Toque no cronômetro ou pressione ESPAÇO para iniciar novamente",
 
         noHistory: "Nenhum solve ainda.",
         confirmClear: "Tem certeza que deseja apagar todo o histórico?",
@@ -100,7 +74,7 @@ const translations = {
         scramble: "Scramble",
         newScramble: "New scramble",
         ready: "Ready",
-        timerHelp: "Press SPACE to start/stop",
+        timerHelp: "Tap the timer or press SPACE to start/stop",
         solves: "Solves",
         best: "Best",
         history: "History",
@@ -113,9 +87,9 @@ const translations = {
         dnfHelp: "The solve was recorded as DNF",
 
         timing: "Timing",
-        stopHelp: "Press SPACE to stop",
+        stopHelp: "Tap the timer or press SPACE to stop",
         finished: "Solve finished",
-        startAgain: "Press SPACE to start again",
+        startAgain: "Tap the timer or press SPACE to start again",
 
         noHistory: "No solves yet.",
         confirmClear: "Are you sure you want to clear the entire history?",
@@ -126,42 +100,32 @@ const translations = {
         dnf: "DNF"
     }
 };
-
-let currentLanguage =
-    localStorage.getItem(LANGUAGE_KEY) || "pt-BR";
-
+let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "pt-BR";
 
 // ==========================================
 // ESTADO
 // ==========================================
-
 let history = loadHistory();
-
 let currentScramble = "";
 let currentCubeType = cubeTypeElement.value;
-
 let timerState = "idle";
-// idle       = parado
+// idle = parado
 // inspection = inspeção
-// running   = cronômetro rodando
+// running = cronômetro rodando
 
 let startTime = 0;
 let inspectionStartTime = 0;
-
 let timerInterval = null;
-
 
 // ==========================================
 // LOCAL STORAGE
 // ==========================================
-
 function loadHistory() {
     const saved = localStorage.getItem(STORAGE_KEY);
 
     if (!saved) {
         return [];
     }
-
     try {
         const data = JSON.parse(saved);
 
@@ -189,11 +153,9 @@ function saveHistory() {
     );
 }
 
-
 // ==========================================
 // IDIOMA
 // ==========================================
-
 function t(key, replacements = {}) {
     let text =
         translations[currentLanguage][key] ||
@@ -208,122 +170,65 @@ function t(key, replacements = {}) {
             );
         }
     );
-
     return text;
 }
 
 function applyLanguage() {
-
-    document.documentElement.lang =
-        currentLanguage;
-
+    document.documentElement.lang = currentLanguage;
     document
         .querySelectorAll("[data-i18n]")
         .forEach(element => {
-
-            const key =
-                element.dataset.i18n;
-
+            const key = element.dataset.i18n;
             element.textContent = t(key);
         });
-
-    languageSelect.value =
-        currentLanguage;
-
+    languageSelect.value = currentLanguage;
     renderDynamicText();
     renderHistory();
 }
 
 function renderDynamicText() {
-
     if (timerState === "idle") {
-
         if (timerStatusElement.classList.contains("dnf")) {
-            timerStatusElement.textContent =
-                t("inspectionExceeded");
-
-            timerHelpElement.textContent =
-                t("dnfHelp");
-
+            timerStatusElement.textContent = t("inspectionExceeded");
+            timerHelpElement.textContent = t("dnfHelp");
             return;
         }
-
-        timerStatusElement.textContent =
-            t("ready");
-
-        timerHelpElement.textContent =
-            t("timerHelp");
-
+        timerStatusElement.textContent = t("ready");
+        timerHelpElement.textContent = t("timerHelp");
         return;
     }
-
     if (timerState === "inspection") {
-
-        timerStatusElement.textContent =
-            t("inspectionRunning");
-
-        timerHelpElement.textContent =
-            t("inspectionHelp");
-
+        timerStatusElement.textContent = t("inspectionRunning");
+        timerHelpElement.textContent = t("inspectionHelp");
         return;
     }
-
     if (timerState === "running") {
-
-        timerStatusElement.textContent =
-            t("timing");
-
-        timerHelpElement.textContent =
-            t("stopHelp");
+        timerStatusElement.textContent = t("timing");
+        timerHelpElement.textContent = t("stopHelp");
     }
 }
 
-languageSelect.addEventListener(
-    "change",
-    () => {
-
-        currentLanguage =
-            languageSelect.value;
-
-        localStorage.setItem(
-            LANGUAGE_KEY,
-            currentLanguage
-        );
-
+languageSelect.addEventListener("change", () => {
+        currentLanguage = languageSelect.value;
+        localStorage.setItem(LANGUAGE_KEY, currentLanguage);
         applyLanguage();
     }
 );
 
-
 // ==========================================
 // SCRAMBLES
 // ==========================================
+const BASIC_MOVES = ["R", "L", "U", "D", "F", "B"];
 
-const BASIC_MOVES = [
-    "R", "L", "U", "D", "F", "B"
-];
-
-const BASIC_MODIFIERS = [
-    "", "'", "2"
-];
+const BASIC_MODIFIERS = ["", "'", "2"];
 
 const WIDE_MOVES = {
-    "4x4": [
-        "R", "L", "U", "D", "F", "B",
-        "Rw", "Lw", "Uw", "Dw", "Fw", "Bw"
-    ],
-
-    "5x5": [
-        "R", "L", "U", "D", "F", "B",
-        "Rw", "Lw", "Uw", "Dw", "Fw", "Bw",
-        "3Rw", "3Lw", "3Uw", "3Dw", "3Fw", "3Bw"
-    ]
+    "4x4": ["R", "L", "U", "D", "F", "B", "Rw", "Lw", "Uw", "Dw", "Fw", "Bw"],
+    "5x5": ["R", "L", "U", "D", "F", "B", "Rw", "Lw", "Uw", "Dw", "Fw", "Bw", "3Rw", "3Lw", "3Uw", "3Dw", "3Fw", "3Bw"]
 };
 
 function randomItem(array) {
-    return array[
-        Math.floor(Math.random() * array.length)
-    ];
+    return array[Math.floor(Math.random() * array.length)];
 }
 
 function getFace(move) {
@@ -331,9 +236,7 @@ function getFace(move) {
 }
 
 function generateScramble(cubeType) {
-
     let length;
-
     if (cubeType === "3x3") {
         length = 20;
     } else if (cubeType === "4x4") {
@@ -342,17 +245,11 @@ function generateScramble(cubeType) {
         length = 60;
     }
 
-    const moves =
-        cubeType === "3x3"
-            ? BASIC_MOVES
-            : WIDE_MOVES[cubeType];
-
+    const moves = cubeType === "3x3" ? BASIC_MOVES: WIDE_MOVES[cubeType];
     const scramble = [];
-
     let previousFace = null;
 
     while (scramble.length < length) {
-
         const move = randomItem(moves);
         const face = getFace(move);
 
@@ -360,67 +257,40 @@ function generateScramble(cubeType) {
             continue;
         }
 
-        const modifier =
-            randomItem(BASIC_MODIFIERS);
-
+        const modifier = randomItem(BASIC_MODIFIERS);
         scramble.push(move + modifier);
-
         previousFace = face;
     }
-
     return scramble.join(" ");
 }
 
 function createNewScramble() {
-
-    currentCubeType =
-        cubeTypeElement.value;
-
-    currentScramble =
-        generateScramble(currentCubeType);
-
-    scrambleCubeTypeElement.textContent =
-        currentCubeType;
-
-    scrambleElement.textContent =
-        currentScramble;
-
+    currentCubeType = cubeTypeElement.value;
+    currentScramble = generateScramble(currentCubeType);
+    scrambleCubeTypeElement.textContent = currentCubeType;
+    scrambleElement.textContent = currentScramble;
     resetTimerDisplay();
 }
-
 
 // ==========================================
 // TIMER
 // ==========================================
-
 function resetTimerDisplay() {
-
     clearInterval(timerInterval);
-
     timerState = "idle";
-
     timerElement.textContent = "0.00";
-
-    timerStatusElement.textContent =
-        t("ready");
-
-    timerStatusElement.className =
-        "timer-status";
-
-    timerHelpElement.textContent =
-        t("timerHelp");
+    timerStatusElement.textContent = t("ready");
+    timerStatusElement.className = "timer-status";
+    timerHelpElement.textContent = t("timerHelp");
 }
 
 function beginAction() {
-
     if (timerState === "idle") {
-
         if (inspectionEnabledElement.checked) {
             startInspection();
         } else {
             startSolveTimer();
         }
-
         return;
     }
 
@@ -438,95 +308,48 @@ function beginAction() {
 // ==========================================
 // INSPEÇÃO
 // ==========================================
-
 function startInspection() {
-
     clearInterval(timerInterval);
 
     timerState = "inspection";
-
-    inspectionStartTime =
-        performance.now();
-
-    timerStatusElement.textContent =
-        t("inspectionRunning");
-
-    timerStatusElement.className =
-        "timer-status inspection";
-
-    timerHelpElement.textContent =
-        t("inspectionHelp");
+    inspectionStartTime = performance.now();
+    timerStatusElement.textContent = t("inspectionRunning");
+    timerStatusElement.className = "timer-status inspection";
+    timerHelpElement.textContent = t("inspectionHelp");
 
     updateInspection();
-
-    timerInterval = setInterval(
-        updateInspection,
-        50
-    );
+    timerInterval = setInterval(updateInspection, 50);
 }
 
 function updateInspection() {
-
-    const elapsed =
-        (performance.now() -
-            inspectionStartTime) / 1000;
-
-    const remaining =
-        Math.max(
-            0,
-            INSPECTION_SECONDS - elapsed
-        );
-
-    timerElement.textContent =
-        remaining.toFixed(1);
+    const elapsed = (performance.now() - inspectionStartTime) / 1000;
+    const remaining = Math.max(0, INSPECTION_SECONDS - elapsed);
+    timerElement.textContent = remaining.toFixed(1);
 
     if (remaining <= 0) {
-
         finishInspectionAsDNF();
-
         return;
     }
-
     if (remaining <= 5) {
-
-        timerStatusElement.textContent =
-            t(
-                "inspectionRunningWithSeconds",
-                {
-                    seconds:
-                        Math.ceil(remaining)
+        timerStatusElement.textContent = t("inspectionRunningWithSeconds",{
+                    seconds:Math.ceil(remaining)
                 }
             );
-
     } else {
-
-        timerStatusElement.textContent =
-            t("inspectionRunning");
+        timerStatusElement.textContent = t("inspectionRunning");
     }
 }
 
 function finishInspectionAsDNF() {
-
     clearInterval(timerInterval);
-
     timerState = "idle";
 
-    timerElement.textContent =
-        t("dnf");
+    timerElement.textContent = t("dnf");
+    timerStatusElement.textContent = t("inspectionExceeded");
+    timerStatusElement.className = "timer-status dnf";
+    timerHelpElement.textContent = t("dnfHelp");
 
-    timerStatusElement.textContent =
-        t("inspectionExceeded");
-
-    timerStatusElement.className =
-        "timer-status dnf";
-
-    timerHelpElement.textContent =
-        t("dnfHelp");
-
-    addSolve({
-        time: null,
-        dnf: true
-    });
+    addSolve({time: null, dnf: true});
 
     setTimeout(() => {
         createNewScramble();
@@ -537,94 +360,68 @@ function finishInspectionAsDNF() {
 // ==========================================
 // CRONÔMETRO
 // ==========================================
-
 function startSolveTimer() {
-
     clearInterval(timerInterval);
 
     timerState = "running";
+    startTime = performance.now();
+    timerStatusElement.textContent = t("timing");
+    timerStatusElement.className = "timer-status";
+    timerHelpElement.textContent = t("stopHelp");
 
-    startTime =
-        performance.now();
-
-    timerStatusElement.textContent =
-        t("timing");
-
-    timerStatusElement.className =
-        "timer-status";
-
-    timerHelpElement.textContent =
-        t("stopHelp");
-
-    timerInterval = setInterval(
-        updateSolveTimer,
-        10
-    );
+    timerInterval = setInterval(updateSolveTimer, 10);
 }
 
 function updateSolveTimer() {
-
-    const elapsed =
-        (performance.now() -
-            startTime) / 1000;
-
-    timerElement.textContent =
-        formatTime(elapsed);
+    const elapsed = (performance.now() - startTime) / 1000;
+    timerElement.textContent = formatTime(elapsed);
 }
 
 function stopSolveTimer() {
-
     clearInterval(timerInterval);
-
-    const elapsed =
-        (performance.now() -
-            startTime) / 1000;
+    const elapsed = (performance.now() - startTime) / 1000;
 
     timerState = "idle";
+    timerElement.textContent = formatTime(elapsed);
+    timerStatusElement.textContent = t("finished");
+    timerHelpElement.textContent = t("startAgain");
 
-    timerElement.textContent =
-        formatTime(elapsed);
-
-    timerStatusElement.textContent =
-        t("finished");
-
-    timerHelpElement.textContent =
-        t("startAgain");
-
-    addSolve({
-        time: elapsed,
-        dnf: false
-    });
-
+    addSolve({time: elapsed, dnf: false});
     createNewScramble();
 }
-
 
 // ==========================================
 // TECLADO
 // ==========================================
-
 document.addEventListener(
     "keydown",
     event => {
-
         if (event.code !== "Space") {
             return;
         }
-
         event.preventDefault();
-
         beginAction();
     }
 );
 
+// ==========================================
+// TOQUE NA TELA
+// ==========================================
+
+timerSectionElement.addEventListener("pointerdown", event => {
+    // Ignora outros tipos de ponteiro que não sejam toque ou mouse
+    if (event.pointerType !== "touch" && event.pointerType !== "mouse") {
+        return;
+    }
+
+    event.preventDefault();
+    beginAction();
+});
 
 // ==========================================
 // HISTÓRICO
 // ==========================================
-
 function addSolve(result) {
-
     const solve = {
         id: crypto.randomUUID(),
         time: result.time,
@@ -635,47 +432,31 @@ function addSolve(result) {
     };
 
     history.push(solve);
-
     saveHistory();
-
     renderHistory();
-
     updateStats();
 }
 
 function deleteSolve(id) {
-
     history = history.filter(
         solve => solve.id !== id
     );
-
     saveHistory();
-
     renderHistory();
-
     updateStats();
 }
 
 function formatTime(seconds) {
-
-    if (
-        seconds === null ||
-        seconds === undefined
-    ) {
+    if (seconds === null || seconds === undefined) {
         return t("dnf");
     }
-
     return Number(seconds).toFixed(2);
 }
 
 function formatDate(timestamp) {
+    const date = new Date(timestamp);
 
-    const date =
-        new Date(timestamp);
-
-    return date.toLocaleDateString(
-        currentLanguage,
-        {
+    return date.toLocaleDateString(currentLanguage,{
             day: "2-digit",
             month: "2-digit",
             year: "numeric"
@@ -683,133 +464,71 @@ function formatDate(timestamp) {
     );
 }
 
-
 // ==========================================
 // COPIAR SOLVE
 // ==========================================
-
 async function copySolve(id) {
-
-    const solve =
-        history.find(
-            item => item.id === id
-        );
+    const solve = history.find(item => item.id === id);
 
     if (!solve) {
         return;
     }
-
-    const time =
-        solve.dnf
-            ? t("dnf")
-            : `${formatTime(solve.time)}s`;
-
-    const text =
-        `${solve.cubeType} | ${time} | ` +
-        `${formatDate(solve.date)} | ` +
-        `${solve.scramble}`;
-
+    const time = solve.dnf ? t("dnf"): `${formatTime(solve.time)}s`;
+    const text = `${solve.cubeType} | ${time} | ` + `${formatDate(solve.date)} | ` + `${solve.scramble}`;
     try {
-
         await navigator.clipboard.writeText(text);
-
         showCopyFeedback(id);
 
     } catch (error) {
-
-        /*
-            Fallback para ambientes onde
-            navigator.clipboard não está disponível.
-        */
-        const textarea =
-            document.createElement("textarea");
-
+        /* Fallback para ambientes onde navigator.clipboard não está disponível  */
+        const textarea = document.createElement("textarea");
         textarea.value = text;
-
         document.body.appendChild(textarea);
-
         textarea.select();
-
         document.execCommand("copy");
-
         textarea.remove();
-
         showCopyFeedback(id);
     }
 }
 
 function showCopyFeedback(id) {
-
-    const button =
-        document.querySelector(
-            `.copy-solve[data-id="${id}"]`
-        );
+    const button = document.querySelector(`.copy-solve[data-id="${id}"]`);
 
     if (!button) {
         return;
     }
 
-    const oldText =
-        button.textContent;
-
+    const oldText = button.textContent;
     button.textContent = "✓";
+    button.title = t("copied");
 
-    button.title =
-        t("copied");
-
-    setTimeout(() => {
-
-        button.textContent =
-            oldText;
-
-        button.title =
-            t("copyTitle");
-
+    setTimeout(() => {button.textContent = oldText;
+        button.title = t("copyTitle");
     }, 1000);
 }
-
 
 // ==========================================
 // RENDER HISTÓRICO
 // ==========================================
-
 function renderHistory() {
-
     historyElement.innerHTML = "";
 
     if (history.length === 0) {
-
         historyElement.innerHTML =
             `<p class="empty-history">
                 ${t("noHistory")}
             </p>`;
-
         return;
     }
+    const reversedHistory = [...history].reverse();
 
-    const reversedHistory =
-        [...history].reverse();
-
-    reversedHistory.forEach(
-        (solve, index) => {
-
-            const element =
-                document.createElement("div");
-
+    reversedHistory.forEach((solve, index) => {
+            const element = document.createElement("div");
             element.className = "solve";
 
-            const number =
-                history.length - index;
-
-            const timeText =
-                solve.dnf
-                    ? t("dnf")
-                    : `${formatTime(solve.time)}s`;
-
-            const timeClass =
-                solve.dnf
-                    ? "solve-time dnf"
-                    : "solve-time";
+            const number = history.length - index;
+            const timeText = solve.dnf ? t("dnf"): `${formatTime(solve.time)}s`;
+            const timeClass = solve.dnf ? "solve-time dnf" : "solve-time";
 
             element.innerHTML = `
                 <span class="solve-number">
@@ -848,7 +567,6 @@ function renderHistory() {
                     ×
                 </button>
             `;
-
             historyElement.appendChild(element);
         }
     );
@@ -856,13 +574,8 @@ function renderHistory() {
     document
         .querySelectorAll(".delete-solve")
         .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-                    deleteSolve(
-                        button.dataset.id
-                    );
+            button.addEventListener("click", () => {
+                    deleteSolve(button.dataset.id);
                 }
             );
         });
@@ -870,126 +583,72 @@ function renderHistory() {
     document
         .querySelectorAll(".copy-solve")
         .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-                    copySolve(
-                        button.dataset.id
-                    );
+            button.addEventListener("click", () => {
+                    copySolve(button.dataset.id);
                 }
             );
         });
 }
 
-
 // ==========================================
 // ESTATÍSTICAS
 // ==========================================
-
 function getTimedSolves() {
-
-    return history.filter(
-        solve =>
-            !solve.dnf &&
-            typeof solve.time === "number"
-    );
+    return history.filter(solve => !solve.dnf && typeof solve.time === "number");
 }
 
 function updateStats() {
 
-    solveCountElement.textContent =
-        history.length;
-
-    const timedSolves =
-        getTimedSolves();
+    solveCountElement.textContent = history.length;
+    const timedSolves = getTimedSolves();
 
     if (timedSolves.length > 0) {
-
-        const best =
-            Math.min(
-                ...timedSolves.map(
-                    solve => solve.time
-                )
-            );
-
-        bestTimeElement.textContent =
-            `${formatTime(best)}s`;
+        const best = Math.min(...timedSolves.map(solve => solve.time));
+        bestTimeElement.textContent = `${formatTime(best)}s`;
 
     } else {
-
         bestTimeElement.textContent = "-";
     }
 
-    ao5Element.textContent =
-        calculateAverage(5);
-
-    ao12Element.textContent =
-        calculateAverage(12);
+    ao5Element.textContent = calculateAverage(5);
+    ao12Element.textContent = calculateAverage(12);
 }
 
 function calculateAverage(count) {
-
     if (history.length < count) {
         return "-";
     }
 
-    const recent =
-        history.slice(-count);
+    const recent = history.slice(-count);
 
-    if (
-        recent.some(
-            solve => solve.dnf
-        )
-    ) {
+    if (recent.some(solve => solve.dnf)) {
         return t("dnf");
     }
 
-    const times =
-        recent.map(
-            solve => solve.time
-        );
-
-    const sorted =
-        [...times].sort(
-            (a, b) => a - b
-        );
+    const times = recent.map(solve => solve.time);
+    const sorted = [...times].sort((a, b) => a - b);
 
     sorted.shift();
     sorted.pop();
 
-    const average =
-        sorted.reduce(
-            (sum, value) =>
-                sum + value,
-            0
-        ) / sorted.length;
-
+    const average = sorted.reduce((sum, value) => sum + value, 0) / sorted.length;
     return `${formatTime(average)}s`;
 }
-
 
 // ==========================================
 // EVENTOS
 // ==========================================
-
-cubeTypeElement.addEventListener(
-    "change",
-    () => {
+cubeTypeElement.addEventListener("change", () => {
         createNewScramble();
     }
 );
 
-newScrambleButton.addEventListener(
-    "click",
-    () => {
+newScrambleButton.addEventListener("click", () => {
         createNewScramble();
     }
 );
 
-clearHistoryButton.addEventListener(
-    "click",
-    () => {
+clearHistoryButton.addEventListener("click", () => {
 
         if (history.length === 0) {
             return;
@@ -1000,29 +659,18 @@ clearHistoryButton.addEventListener(
         }
 
         history = [];
-
         saveHistory();
-
         renderHistory();
-
         updateStats();
-
         createNewScramble();
     }
 );
 
-
 // ==========================================
 // INICIALIZAÇÃO
 // ==========================================
-
-languageSelect.value =
-    currentLanguage;
-
+languageSelect.value = currentLanguage;
 applyLanguage();
-
 createNewScramble();
-
 renderHistory();
-
 updateStats();
