@@ -100,6 +100,7 @@ const translations = {
         dnf: "DNF"
     }
 };
+
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "pt-BR";
 
 // ==========================================
@@ -109,13 +110,22 @@ let history = loadHistory();
 let currentScramble = "";
 let currentCubeType = cubeTypeElement.value;
 let timerState = "idle";
-// idle = parado
+// idle       = parado
 // inspection = inspeção
-// running = cronômetro rodando
+// running   = cronômetro rodando
 
 let startTime = 0;
 let inspectionStartTime = 0;
 let timerInterval = null;
+
+let touchHoldTimer = null;
+let touchHoldActive = false;
+let touchHoldReady = false;
+let touchStartX = 0;
+let touchStartY = 0;
+
+const TOUCH_HOLD_TIME = 2000;
+const TOUCH_MOVE_THRESHOLD = 15;
 
 // ==========================================
 // LOCAL STORAGE
@@ -153,9 +163,11 @@ function saveHistory() {
     );
 }
 
+
 // ==========================================
 // IDIOMA
 // ==========================================
+
 function t(key, replacements = {}) {
     let text =
         translations[currentLanguage][key] ||
@@ -282,6 +294,8 @@ function resetTimerDisplay() {
     timerStatusElement.textContent = t("ready");
     timerStatusElement.className = "timer-status";
     timerHelpElement.textContent = t("timerHelp");
+    timerElement.classList.remove("running");
+    timerElement.classList.remove("ready-to-start");
 }
 
 function beginAction() {
@@ -363,8 +377,14 @@ function finishInspectionAsDNF() {
 function startSolveTimer() {
     clearInterval(timerInterval);
 
+    resetTouchHold();
+
     timerState = "running";
     startTime = performance.now();
+
+    timerElement.classList.remove("ready-to-start");
+    timerElement.classList.add("running");
+
     timerStatusElement.textContent = t("timing");
     timerStatusElement.className = "timer-status";
     timerHelpElement.textContent = t("stopHelp");
@@ -379,15 +399,106 @@ function updateSolveTimer() {
 
 function stopSolveTimer() {
     clearInterval(timerInterval);
-    const elapsed = (performance.now() - startTime) / 1000;
 
+    const elapsed = (performance.now() - startTime) / 1000;
     timerState = "idle";
+
+    timerElement.classList.remove("running");
+    timerElement.classList.remove("ready-to-start");
     timerElement.textContent = formatTime(elapsed);
     timerStatusElement.textContent = t("finished");
     timerHelpElement.textContent = t("startAgain");
 
     addSolve({time: elapsed, dnf: false});
     createNewScramble();
+}
+
+// ==========================================
+// TOQUE / SEGURAR NA TELA
+// ==========================================
+function resetTouchHold() {
+    clearTimeout(touchHoldTimer);
+    touchHoldTimer = null;
+    touchHoldActive = false;
+    touchHoldReady = false;
+    timerElement.classList.remove("ready-to-start");
+}
+
+function startTouchHold(event) {
+    // Só aplica a lógica especial para toque
+    if (event.pointerType !== "touch") {
+        return;
+    }
+
+    // Se o cronômetro estiver rodando, um toque para o cronômetro
+    if (timerState === "running") {
+        event.preventDefault();
+        stopSolveTimer();
+        return;
+    }
+
+    // Só permite iniciar quando estiver parado
+    if (timerState !== "idle") {
+        return;
+    }
+    event.preventDefault();
+
+    touchHoldActive = true;
+    touchHoldReady = false;
+    touchStartX = event.clientX;
+    touchStartY = event.clientY;
+
+    clearTimeout(touchHoldTimer);
+
+    touchHoldTimer = setTimeout(() => {
+        if (!touchHoldActive) {
+            return;
+        }
+
+        touchHoldReady = true;
+        timerElement.classList.add("ready-to-start");
+    }, TOUCH_HOLD_TIME);
+}
+
+function handleTouchMove(event) {
+    if (event.pointerType !== "touch" || !touchHoldActive) {
+        return;
+    }
+
+    const deltaX = Math.abs(event.clientX - touchStartX);
+    const deltaY = Math.abs(event.clientY - touchStartY);
+
+    if (
+        deltaX > TOUCH_MOVE_THRESHOLD ||
+        deltaY > TOUCH_MOVE_THRESHOLD
+    ) {
+        resetTouchHold();
+    }
+}
+
+function finishTouchHold(event) {
+    if (event.pointerType !== "touch" || !touchHoldActive) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const shouldStart = touchHoldReady;
+
+    resetTouchHold();
+
+    // O cronômetro só começa quando o dedo é solto depois de completar os 2 segundos
+    if (shouldStart && timerState === "idle") {
+        startSolveTimer();
+    }
+}
+
+function cancelTouchHold(event) {
+    if (event.pointerType !== "touch") {
+        return;
+    }
+
+    resetTouchHold();
 }
 
 // ==========================================
@@ -407,16 +518,16 @@ document.addEventListener(
 // ==========================================
 // TOQUE NA TELA
 // ==========================================
-
-timerSectionElement.addEventListener("pointerdown", event => {
-    // Ignora outros tipos de ponteiro que não sejam toque ou mouse
-    if (event.pointerType !== "touch" && event.pointerType !== "mouse") {
-        return;
+timerSectionElement.addEventListener("pointerdown", startTouchHold);
+timerSectionElement.addEventListener("pointermove", handleTouchMove);
+timerSectionElement.addEventListener("pointerup", finishTouchHold);
+timerSectionElement.addEventListener("pointercancel", cancelTouchHold);
+timerSectionElement.addEventListener( "pointerleave", event => {
+    if (event.pointerType === "touch") {
+            resetTouchHold();
+        }
     }
-
-    event.preventDefault();
-    beginAction();
-});
+);
 
 // ==========================================
 // HISTÓRICO
@@ -480,7 +591,10 @@ async function copySolve(id) {
         showCopyFeedback(id);
 
     } catch (error) {
-        /* Fallback para ambientes onde navigator.clipboard não está disponível  */
+        /*
+            Fallback para ambientes onde
+            navigator.clipboard não está disponível.
+        */
         const textarea = document.createElement("textarea");
         textarea.value = text;
         document.body.appendChild(textarea);
@@ -621,7 +735,9 @@ function calculateAverage(count) {
 
     const recent = history.slice(-count);
 
-    if (recent.some(solve => solve.dnf)) {
+    if (
+        recent.some(solve => solve.dnf)
+    ) {
         return t("dnf");
     }
 
