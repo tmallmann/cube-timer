@@ -128,7 +128,7 @@ let touchHoldReady = false;
 let touchStartX = 0;
 let touchStartY = 0;
 
-const TOUCH_HOLD_TIME = 1000;
+const TOUCH_HOLD_TIME = 200;
 const TOUCH_MOVE_THRESHOLD = 15;
 
 // ==========================================
