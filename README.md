@@ -15,6 +15,7 @@ https://tmallmann.github.io/cube-timer/
 <br>
 <sub>
 Implementar:<br>
+· Sessões;
 · Mais modalidades;
 · Preview do scramble;
 </sub>
