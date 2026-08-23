@@ -52,9 +52,11 @@ const translations = {
         dnfHelp: "O solve foi registrado como DNF",
 
         timing: "Cronometrando",
-        stopHelp: "Toque no cronômetro ou pressione ESPAÇO para parar",
+        timerHelpDesktop: "Pressione ESPAÇO para iniciar/parar",
+        timerHelpMobile: "Toque para iniciar/parar",
         finished: "Solve finalizado",
-        startAgain: "Toque no cronômetro ou pressione ESPAÇO para iniciar novamente",
+        startAgainDesktop: "Pressione ESPAÇO para iniciar novamente",
+        startAgainMobile: "Toque para iniciar novamente",
 
         noHistory: "Nenhum solve ainda.",
         confirmClear: "Tem certeza que deseja apagar todo o histórico?",
@@ -87,9 +89,11 @@ const translations = {
         dnfHelp: "The solve was recorded as DNF",
 
         timing: "Timing",
-        stopHelp: "Tap the timer or press SPACE to stop",
+        timerHelpDesktop: "Press SPACE to start/stop",
+        timerHelpMobile: "Tap to start/stop",
         finished: "Solve finished",
-        startAgain: "Tap the timer or press SPACE to start again",
+        startAgainDesktop: "Press SPACE to start again",
+        startAgainMobile: "Tap to start again",
 
         noHistory: "No solves yet.",
         confirmClear: "Are you sure you want to clear the entire history?",
@@ -124,7 +128,7 @@ let touchHoldReady = false;
 let touchStartX = 0;
 let touchStartY = 0;
 
-const TOUCH_HOLD_TIME = 2000;
+const TOUCH_HOLD_TIME = 1000;
 const TOUCH_MOVE_THRESHOLD = 15;
 
 // ==========================================
@@ -202,7 +206,7 @@ function renderDynamicText() {
     if (timerState === "idle") {
         if (timerStatusElement.classList.contains("dnf")) {
             timerStatusElement.textContent = t("inspectionExceeded");
-            timerHelpElement.textContent = t("dnfHelp");
+            timerHelpElement.textContent = getTimerHelp();
             return;
         }
         timerStatusElement.textContent = t("ready");
@@ -231,9 +235,7 @@ languageSelect.addEventListener("change", () => {
 // SCRAMBLES
 // ==========================================
 const BASIC_MOVES = ["R", "L", "U", "D", "F", "B"];
-
 const BASIC_MODIFIERS = ["", "'", "2"];
-
 const WIDE_MOVES = {
     "4x4": ["R", "L", "U", "D", "F", "B", "Rw", "Lw", "Uw", "Dw", "Fw", "Bw"],
     "5x5": ["R", "L", "U", "D", "F", "B", "Rw", "Lw", "Uw", "Dw", "Fw", "Bw", "3Rw", "3Lw", "3Uw", "3Dw", "3Fw", "3Bw"]
@@ -293,7 +295,7 @@ function resetTimerDisplay() {
     timerElement.textContent = "0.00";
     timerStatusElement.textContent = t("ready");
     timerStatusElement.className = "timer-status";
-    timerHelpElement.textContent = t("timerHelp");
+    timerHelpElement.textContent = getTimerHelp();
     timerElement.classList.remove("running");
     timerElement.classList.remove("ready-to-start");
 }
@@ -316,6 +318,20 @@ function beginAction() {
     if (timerState === "running") {
         stopSolveTimer();
     }
+}
+
+function isTouchDevice() {
+    return ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+}
+
+function getTimerHelp() {
+    return isTouchDevice() ? t("timerHelpMobile") : t("timerHelpDesktop");
+}
+
+function getStartAgainHelp() {
+    return isTouchDevice()
+        ? t("startAgainMobile")
+        : t("startAgainDesktop");
 }
 
 
@@ -407,7 +423,7 @@ function stopSolveTimer() {
     timerElement.classList.remove("ready-to-start");
     timerElement.textContent = formatTime(elapsed);
     timerStatusElement.textContent = t("finished");
-    timerHelpElement.textContent = t("startAgain");
+    timerHelpElement.textContent = getStartAgainHelp();
 
     addSolve({time: elapsed, dnf: false});
     createNewScramble();
