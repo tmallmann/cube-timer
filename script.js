@@ -40,8 +40,8 @@ const translations = {
         newScramble: "Novo scramble",
         ready: "Pronto",
 
-        timerHelpDesktop: "Pressione ESPAÇO para iniciar/parar",
-        timerHelpMobile: "Toque e segure para iniciar • Toque para parar",
+        timerHelpDesktop: "Pressione ESPAÇO para iniciar",
+        timerHelpMobile: "Toque para iniciar",
 
         solves: "Solves",
         best: "Melhor",
@@ -60,9 +60,6 @@ const translations = {
         stopHelpMobile: "Toque para parar",
 
         finished: "Solve finalizado",
-
-        startAgainDesktop: "Pressione ESPAÇO para iniciar novamente",
-        startAgainMobile: "Toque e segure para iniciar novamente",
 
         noHistory: "Nenhum solve ainda.",
         confirmClear: "Tem certeza que deseja apagar todo o histórico?",
@@ -83,8 +80,8 @@ const translations = {
         newScramble: "New scramble",
         ready: "Ready",
 
-        timerHelpDesktop: "Press SPACE to start/stop",
-        timerHelpMobile: "Tap and hold to start • Tap to stop",
+        timerHelpDesktop: "Press SPACE to start",
+        timerHelpMobile: "Tap to start",
 
         solves: "Solves",
         best: "Best",
@@ -103,9 +100,6 @@ const translations = {
         stopHelpMobile: "Tap to stop",
 
         finished: "Solve finished",
-
-        startAgainDesktop: "Press SPACE to start again",
-        startAgainMobile: "Tap and hold to start again",
 
         noHistory: "No solves yet.",
         confirmClear: "Are you sure you want to clear the entire history?",
@@ -183,7 +177,6 @@ function saveHistory() {
 // ==========================================
 // IDIOMA
 // ==========================================
-
 function t(key, replacements = {}) {
     let text =
         translations[currentLanguage][key] ||
@@ -218,11 +211,11 @@ function renderDynamicText() {
     if (timerState === "idle") {
         if (timerStatusElement.classList.contains("dnf")) {
             timerStatusElement.textContent = t("inspectionExceeded");
-            timerHelpElement.textContent = getTimerHelp();
+            timerHelpElement.textContent = t("dnfHelp");
             return;
         }
         timerStatusElement.textContent = t("ready");
-        timerHelpElement.textContent = t("timerHelp");
+        timerHelpElement.textContent = getStartHelp();
         return;
     }
     if (timerState === "inspection") {
@@ -232,7 +225,7 @@ function renderDynamicText() {
     }
     if (timerState === "running") {
         timerStatusElement.textContent = t("timing");
-        timerHelpElement.textContent = t("stopHelp");
+        timerHelpElement.textContent = getStopHelp();
     }
 }
 
@@ -336,16 +329,12 @@ function isTouchDevice() {
     return ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 }
 
-function getTimerHelp() {
+function getStartHelp() {
     return isTouchDevice() ? t("timerHelpMobile") : t("timerHelpDesktop");
 }
 
 function getStopHelp() {
     return isTouchDevice() ? t("stopHelpMobile") : t("stopHelpDesktop");
-}
-
-function getStartAgainHelp() {
-    return isTouchDevice() ? t("startAgainMobile") : t("startAgainDesktop");
 }
 
 // ==========================================
@@ -405,7 +394,6 @@ function finishInspectionAsDNF() {
 // ==========================================
 function startSolveTimer() {
     clearInterval(timerInterval);
-
     resetTouchHold();
 
     timerState = "running";
@@ -416,7 +404,7 @@ function startSolveTimer() {
 
     timerStatusElement.textContent = t("timing");
     timerStatusElement.className = "timer-status";
-    timerHelpElement.textContent = t("stopHelp");
+    timerHelpElement.textContent = getStopHelp();
 
     timerInterval = setInterval(updateSolveTimer, 10);
 }
@@ -428,15 +416,14 @@ function updateSolveTimer() {
 
 function stopSolveTimer() {
     clearInterval(timerInterval);
-
     const elapsed = (performance.now() - startTime) / 1000;
-    timerState = "idle";
 
+    timerState = "idle";
     timerElement.classList.remove("running");
     timerElement.classList.remove("ready-to-start");
     timerElement.textContent = formatTime(elapsed);
     timerStatusElement.textContent = t("finished");
-    timerHelpElement.textContent = getStartAgainHelp();
+    timerHelpElement.textContent = getStartHelp();
 
     addSolve({time: elapsed, dnf: false});
     createNewScramble();
