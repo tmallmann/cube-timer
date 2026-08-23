@@ -41,7 +41,7 @@ const translations = {
         ready: "Pronto",
 
         timerHelpDesktop: "Pressione ESPAÇO para iniciar",
-        timerHelpMobile: "Toque para iniciar",
+        timerHelpMobile: "Toque e segure para iniciar",
 
         solves: "Solves",
         best: "Melhor",
@@ -81,7 +81,7 @@ const translations = {
         ready: "Ready",
 
         timerHelpDesktop: "Press SPACE to start",
-        timerHelpMobile: "Tap to start",
+        timerHelpMobile: "Tap and hold to start",
 
         solves: "Solves",
         best: "Best",
@@ -134,7 +134,7 @@ let touchHoldReady = false;
 let touchStartX = 0;
 let touchStartY = 0;
 
-const TOUCH_HOLD_TIME = 1000;
+const TOUCH_HOLD_TIME = 200;
 const TOUCH_MOVE_THRESHOLD = 15;
 
 // ==========================================
