@@ -14,7 +14,9 @@ https://tmallmann.github.io/cube-timer/
 <br>
 <sub>
 Implementar:<br>
-· Suporte para mobile;
-· Mais modalidades;
-· Scramble preview;
+· ☑ Histórico;
+· ☑ Suporte para mobile;
+· ☑ Inglês/Português;
+· ☐ Mais modalidades;
+· ☐ Preview do scramble;
 </sub>
