@@ -1,6 +1,6 @@
 ## ⏱️ Cube Timer
 
-Melhore seus tempos e acompanhe sua evolução de forma rápida e prática.
+Registre seus tempos e acompanhe sua evolução.
 
 Escolha sua modalidade e use o cronômetro para registrar cada resolução.<br>
 Seus tempos são salvos automaticamente no histórico, permitindo acompanhar seu desempenho e comparar sua evolução.
