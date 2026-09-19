@@ -3,7 +3,7 @@
 Registre seus tempos e acompanhe sua evolução.
 
 Escolha sua modalidade e use o cronômetro para registrar cada resolução.<br>
-Seus tempos são salvos automaticamente no histórico, permitindo acompanhar seu desempenho e comparar sua evolução.
+Seus tempos são salvos automaticamente no histórico, permitindo acompanhar seu desempenho.
 
 - 🎯 Cronômetro com opção de inspeção.
 - 🎯 Histórico de resoluções.
