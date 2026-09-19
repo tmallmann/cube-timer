@@ -1,11 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cube Timer</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
+<div id="confirmModal" class="modal-overlay" hidden>
+    <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle"
+        aria-describedby="confirmModalMessage">
+        <div class="confirm-modal-icon" aria-hidden="true">
+            !
+        </div>
+
+        <div class="confirm-modal-content">
+            <h2 id="confirmModalTitle">Limpar histórico</h2>
+
+            <p id="confirmModalMessage">
+                Tem certeza que deseja apagar todo o histórico?
+            </p>
+        </div>
+
+        <div class="confirm-modal-actions">
+            <button type="button" id="cancelConfirmButton" class="modal-button secondary">
+                Cancelar
+            </button>
+
+            <button type="button" id="confirmActionButton" class="modal-button danger">
+                Limpar histórico
+            </button>
+        </div>
+    </div>
+</div>
+
 <body>
     <main class="container">
         <header>
@@ -56,10 +85,14 @@
 
         <section class="timer-section">
             <div id="timerStatus" class="timer-status" data-i18n="ready">Pronto</div>
+
             <div id="timer" class="timer">0.00</div>
+
             <p id="timerHelp" class="timer-help" data-i18n="timerHelp">
                 Pressione ESPAÇO para iniciar/parar
             </p>
+
+            <div id="newRecordBanner" class="new-record-banner" aria-live="polite"></div>
         </section>
 
         <section class="stats">
@@ -83,7 +116,10 @@
 
         <section class="history-section card">
             <div class="history-header">
-                <h2 data-i18n="history">Histórico</h2>
+                <h2>
+                    <span data-i18n="history">Histórico</span>
+                    <span id="historyCubeType">3x3</span>
+                </h2>
                 <button id="clearHistory" class="danger" data-i18n="clearHistory">
                     Limpar histórico
                 </button>
@@ -94,5 +130,6 @@
     </main>
 
     <script src="script.js"></script>
+
 </body>
 </html>
