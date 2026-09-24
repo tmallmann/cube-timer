@@ -8,55 +8,77 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<div id="confirmModal" class="modal-overlay" hidden>
-    <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle"
-        aria-describedby="confirmModalMessage">
-        <div class="confirm-modal-icon" aria-hidden="true">
-            !
-        </div>
+<body>
 
-        <div class="confirm-modal-content">
-            <h2 id="confirmModalTitle">Limpar histórico</h2>
+    <div id="confirmModal" class="modal-overlay" hidden>
+        <div class="confirm-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="confirmModalTitle"
+             aria-describedby="confirmModalMessage">
 
-            <p id="confirmModalMessage">
-                Tem certeza que deseja apagar todo o histórico?
-            </p>
-        </div>
+            <div class="confirm-modal-icon" aria-hidden="true">
+                !
+            </div>
 
-        <div class="confirm-modal-actions">
-            <button type="button" id="cancelConfirmButton" class="modal-button secondary">
-                Cancelar
-            </button>
+            <div class="confirm-modal-content">
+                <h2 id="confirmModalTitle">Limpar histórico</h2>
 
-            <button type="button" id="confirmActionButton" class="modal-button danger">
-                Limpar histórico
-            </button>
+                <p id="confirmModalMessage">
+                    Tem certeza que deseja apagar todo o histórico?
+                </p>
+            </div>
+
+            <div class="confirm-modal-actions">
+                <button
+                    type="button"
+                    id="cancelConfirmButton"
+                    class="modal-button secondary">
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    id="confirmActionButton"
+                    class="modal-button danger">
+                    Limpar histórico
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<body>
     <main class="container">
+
         <header>
             <div class="header-top">
+
                 <div>
                     <h1 data-i18n="title">Cube Timer</h1>
-                    <p data-i18n="subtitle">Timer, scrambles e histórico de solves</p>
+
+                    <p data-i18n="subtitle">
+                        Timer, scrambles e histórico de solves
+                    </p>
                 </div>
 
                 <label class="language-control">
                     <span data-i18n="language">Idioma</span>
+
                     <select id="languageSelect" aria-label="Idioma">
                         <option value="pt-BR">Português</option>
                         <option value="en">English</option>
                     </select>
                 </label>
+
             </div>
         </header>
 
         <section class="controls card">
+
             <div class="control-group">
-                <label for="cubeType" data-i18n="cube">Cubo</label>
+                <label for="cubeType" data-i18n="cube">
+                    Cubo
+                </label>
+
                 <select id="cubeType">
                     <option value="3x3">3x3</option>
                     <option value="4x4">4x4</option>
@@ -66,67 +88,122 @@
 
             <label class="checkbox-control">
                 <input type="checkbox" id="inspectionEnabled">
-                <span data-i18n="inspection">Inspeção de 15 segundos</span>
+
+                <span data-i18n="inspection">
+                    Inspeção de 15 segundos
+                </span>
             </label>
+
         </section>
 
         <section class="scramble-section card">
+
             <div class="section-title-row">
+
                 <h2>
                     <span data-i18n="scramble">Scramble</span>
                     <span id="scrambleCubeType">3x3</span>
                 </h2>
+
                 <button id="newScramble" data-i18n="newScramble">
                     Novo scramble
                 </button>
+
             </div>
-            <div id="scramble" class="scramble">Carregando...</div>
+
+            <div id="scramble" class="scramble">
+                Carregando...
+            </div>
+
         </section>
 
         <section class="timer-section">
-            <div id="timerStatus" class="timer-status" data-i18n="ready">Pronto</div>
 
-            <div id="timer" class="timer">0.00</div>
+            <div id="timerStatus"
+                 class="timer-status"
+                 data-i18n="ready">
+                Pronto
+            </div>
 
-            <p id="timerHelp" class="timer-help" data-i18n="timerHelp">
-                Pressione ESPAÇO para iniciar/parar
+            <div id="timer" class="timer">
+                0.00
+            </div>
+
+            <p id="timerHelp" class="timer-help">
+                Pressione e segure ESPAÇO
             </p>
 
-            <div id="newRecordBanner" class="new-record-banner" aria-live="polite"></div>
+            <div
+                id="newRecordBanner"
+                class="new-record-banner"
+                aria-live="polite">
+            </div>
+
         </section>
 
         <section class="stats">
+
             <div class="stat card">
-                <span class="stat-label" data-i18n="solves">Solves</span>
+                <span class="stat-label" data-i18n="solves">
+                    Solves
+                </span>
+
                 <strong id="solveCount">0</strong>
             </div>
+
             <div class="stat card">
-                <span class="stat-label" data-i18n="best">Melhor</span>
+                <span class="stat-label" data-i18n="best">
+                    Melhor
+                </span>
+
                 <strong id="bestTime">-</strong>
             </div>
+
             <div class="stat card">
-                <span class="stat-label">Ao5</span>
+                <span class="stat-label">
+                    Ao5
+                </span>
+
                 <strong id="ao5">-</strong>
             </div>
+
             <div class="stat card">
-                <span class="stat-label">Ao12</span>
+                <span class="stat-label">
+                    Ao12
+                </span>
+
                 <strong id="ao12">-</strong>
             </div>
+
         </section>
 
         <section class="history-section card">
+
             <div class="history-header">
+
                 <h2>
-                    <span data-i18n="history">Histórico</span>
-                    <span id="historyCubeType">3x3</span>
+                    <span data-i18n="history">
+                        Histórico
+                    </span>
+
+                    <span id="historyCubeType">
+                        3x3
+                    </span>
                 </h2>
-                <button id="clearHistory" class="danger" data-i18n="clearHistory">
+
+                <button
+                    id="clearHistory"
+                    class="danger"
+                    data-i18n="clearHistory">
                     Limpar histórico
                 </button>
+
             </div>
 
             <div id="history" class="history"></div>
+
         </section>
+
     </main>
 
     <script src="script.js"></script>
