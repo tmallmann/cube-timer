@@ -1,4 +1,4 @@
-# Cube Timer
+## ⏱️ Cube Timer
 https://tmallmann.github.io/cube-timer/
 
 Implementar:
